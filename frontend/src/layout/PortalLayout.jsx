@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
+import { SocketContext } from '../context/SocketContext.js';
 import API_URL from '../constants/constants';
 
 const PortalLayout = ({ children }) => {
   const auth = useAuth();
+  const { connectSocket, disconnectSocket, stream } = useContext(SocketContext);
+
+  useEffect(() => {
+    // Establecer la conexión de Socket.IO cuando el componente se monta
+    connectSocket();
+
+    // Desconectar Socket.IO cuando el componente se desmonta
+    return () => {
+      disconnectSocket();
+    };
+  }, []);
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -17,6 +29,10 @@ const PortalLayout = ({ children }) => {
         },
       });
       if (response.ok) {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
+        disconnectSocket();
         auth.signOut();
       }
     } catch (error) {}

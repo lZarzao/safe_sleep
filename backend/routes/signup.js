@@ -5,7 +5,7 @@ import User from '../schema/user.js';
 export const signupRouter = Router();
 
 signupRouter.post('/', async (req, res) => {
-  const { username, name, password } = req.body;
+  const { username, name, password, isAdmin } = req.body;
 
   if (!username || !name || !password) {
     return res.status(400).json(
@@ -27,7 +27,7 @@ signupRouter.post('/', async (req, res) => {
       );
     }
 
-    const newUser = new User({ username, name, password });
+    const newUser = new User({ username, name, password, isAdmin });
     await newUser.save();
 
     res.status(200).json(

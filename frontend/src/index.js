@@ -7,6 +7,7 @@ import Login from './routes/Login';
 import SignUp from './routes/SignUp';
 import Dashboard from './routes/Dashboard';
 import { AuthProvider } from './auth/AuthProvider';
+import { ContextProvider } from './context/SocketContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 const router = createBrowserRouter([
@@ -23,10 +24,14 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <ProtectedRoute />,
-    children: [{
-      path: "/dashboard",
-      element: <Dashboard />
-    }]
+    children: [
+      {
+        path: '/dashboard',
+        element: (
+            <Dashboard />
+        ),
+      },
+    ],
     // errorElement: <div>Error</div>
   },
 ]);
@@ -35,7 +40,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ContextProvider>
+        <RouterProvider router={router} />
+      </ContextProvider>
     </AuthProvider>
   </React.StrictMode>
 );

@@ -50,10 +50,12 @@ app.get('/', (req, res) => {
 
 // Socket.IO event handling
 io.on('connection', (socket) => {
+  console.log("He recibido una solicitud", socket.id)
   socket.emit('me', socket.id);
 
   socket.on('disconnect', () => {
     socket.broadcast.emit('callEnded');
+    console.log("Se cierra la conexión")
   });
 
   socket.on('callUser', ({ userToCall, signalData, from, name }) => {
@@ -65,6 +67,6 @@ io.on('connection', (socket) => {
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });

@@ -8,6 +8,7 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [errorResponse, setErrorResponse] = useState('');
 
   const auth = useAuth();
@@ -26,6 +27,7 @@ const Signup = () => {
           name,
           username,
           password,
+          isAdmin,
         }),
       });
 
@@ -60,7 +62,10 @@ const Signup = () => {
 
         <label>Password</label>
         <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-
+        <label>
+          <input type='checkbox' checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />
+          Administrador
+        </label>
         <button>Create user</button>
       </form>
     </DefaultLayout>

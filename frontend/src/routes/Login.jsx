@@ -35,7 +35,6 @@ const Login = () => {
           auth.saveUser(json);
           goTo('/dashboard');
         }
-
       } else {
         console.log('Something went wrong');
         const json = await response.json();

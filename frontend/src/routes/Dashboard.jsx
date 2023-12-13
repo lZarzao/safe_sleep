@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useAuth } from '../auth/AuthProvider.js';
+import { SocketContext } from '../context/SocketContext';
 import PortalLayout from '../layout/PortalLayout.jsx';
 import API_URL from '../constants/constants';
 
@@ -7,6 +8,7 @@ const Dashboard = () => {
   const [todo, setTodo] = useState([]);
   const [title, setTitle] = useState('');
   const auth = useAuth();
+  const { me } = useContext(SocketContext);
 
   useEffect(() => {
     loadTodo();
@@ -60,6 +62,7 @@ const Dashboard = () => {
   return (
     <PortalLayout>
       <h1>Dashboard de {auth.getUser()?.name || ''}</h1>
+      <p>Mi Socket ID: {me}</p>
       <form onSubmit={handleSubmit}>
         <input type='text' placeholder='Nuevo todo...' onChange={(e) => setTitle(e.target.value)} value={title} />
       </form>
