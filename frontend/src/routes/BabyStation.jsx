@@ -12,7 +12,21 @@ export const BabyStation = () => {
   const accessToken = auth.getAccessToken();
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
-  const { me, myVideo, SocketIdUpdated } = useContext(SocketContext);
+  const {
+    me,
+    setCall,
+    myVideo,
+    SocketIdUpdated,
+    callUser,
+    userVideo,
+    socket,
+    leaveCall,
+    callAccepted,
+    setCallAccepted,
+    callEnded,
+    setCallEnded,
+    connectionRef,
+  } = useContext(SocketContext);
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState('');
@@ -20,7 +34,7 @@ export const BabyStation = () => {
   const [parentId, setparentId] = useState('');
 
   const handleSearch = async () => {
-    setEmail('')
+    setEmail('');
     try {
       const response = await fetch(`${API_URL}/user/${email}`, {
         method: 'GET',
@@ -80,7 +94,7 @@ export const BabyStation = () => {
           parentId: parentId,
         }),
       });
-      setLoading(false)
+      setLoading(false);
       if (response.ok) {
         const data = await response.json();
         console.log('Grupo creado con éxito:', data);
@@ -142,6 +156,33 @@ export const BabyStation = () => {
   }, [me]);
 
   useEffect(() => {
+    if (socket) {
+      const handleEndCall = () => {
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+          connectionRef.current = null;
+        }
+
+        if (userVideo.current && userVideo.current.srcObject) {
+          userVideo.current.srcObject.getTracks().forEach((track) => track.stop());
+          userVideo.current.srcObject = null;
+        }
+
+        setCall({});
+        setCallAccepted(false);
+        setCallEnded(true);
+        console.log('Llamada finalizada');
+      };
+
+      socket.on('endCall', handleEndCall);
+
+      return () => {
+        socket.off('endCall', handleEndCall);
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
     const handleParentSocketUpdate = (data) => {
       setGroup((currentGroup) => {
         return currentGroup.map((member) => {
@@ -156,6 +197,28 @@ export const BabyStation = () => {
 
     SocketIdUpdated(handleParentSocketUpdate);
   }, [SocketIdUpdated]);
+
+  const handleConnect = (parentSocketId) => {
+    callUser(parentSocketId);
+  };
+
+  const handleEndCall = (parentSocketId) => {
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+      connectionRef.current = null;
+    }
+
+    if (userVideo.current && userVideo.current.srcObject) {
+      userVideo.current.srcObject.getTracks().forEach((track) => track.stop());
+      userVideo.current.srcObject = null;
+    }
+
+    setCall({});
+    setCallAccepted(false);
+    setCallEnded(true);
+    leaveCall(parentSocketId);
+    // Cualquier otra limpieza o actualización de UI
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -174,7 +237,12 @@ export const BabyStation = () => {
             <div key={member._id}>
               <p key={member._id}>{member.parentId.parentId.name}</p>
               {member.parentId.socketId ? (
-                <button onClick={() => member.parentId.socketId}>Conectar</button>
+                <div>
+                  <button onClick={() => handleConnect(member.parentId.socketId)}>Conectar</button>
+                  {callAccepted && !callEnded ? (
+                    <button onClick={() => handleEndCall(member.parentId.socketId)}>Hang Up</button>
+                  ) : null}
+                </div>
               ) : (
                 <p>Desconectado</p>
               )}
@@ -206,6 +274,7 @@ export const BabyStation = () => {
           {error && <p>{error}</p>}
         </div>
       )}
+      <video playsInline ref={userVideo} autoPlay />
     </BabyStationLayout>
   );
 };

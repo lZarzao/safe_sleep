@@ -9,12 +9,24 @@ export const ParentStation = () => {
   const location = useLocation();
   const parentDataData = location.state?.parentData;
   const auth = useAuth();
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
-  const { me, myVideo, SocketIdUpdated } = useContext(SocketContext);
+  const {
+    me,
+    myVideo,
+    SocketIdUpdated,
+    answerCall,
+    call,
+    callAccepted,
+    callEnded,
+    userVideo,
+    leaveCall,
+    socket,
+    connectionRef,
+    setCall,
+    setCallAccepted,
+    setCallEnded,
+  } = useContext(SocketContext);
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [parentId, setparentId] = useState('');
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -64,6 +76,32 @@ export const ParentStation = () => {
     saveSocketId();
   }, [me]);
 
+  useEffect(() => {
+    if (socket) {
+      const handleEndCall = () => {
+        if (connectionRef.current) {
+          connectionRef.current.destroy();
+          connectionRef.current = null;
+        }
+
+        if (userVideo.current && userVideo.current.srcObject) {
+          userVideo.current.srcObject.getTracks().forEach((track) => track.stop());
+          userVideo.current.srcObject = null;
+        }
+
+        setCall({});
+        setCallAccepted(false);
+        setCallEnded(true);
+        console.log('Llamada finalizada');
+      };
+
+      socket.on('endCall', handleEndCall);
+
+      return () => {
+        socket.off('endCall', handleEndCall);
+      };
+    }
+  }, [socket]);
 
   useEffect(() => {
     const handleBabySocketUpdate = (data) => {
@@ -85,13 +123,38 @@ export const ParentStation = () => {
     return <div>Loading...</div>;
   }
 
+  const handleEndCall = () => {
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+      connectionRef.current = null;
+    }
+
+    if (userVideo.current && userVideo.current.srcObject) {
+      userVideo.current.srcObject.getTracks().forEach((track) => track.stop());
+      userVideo.current.srcObject = null;
+    }
+
+    setCall({});
+    setCallAccepted(false);
+    setCallEnded(true);
+    leaveCall();
+    // Cualquier otra limpieza o actualización de UI
+  };
+
   return (
     <BabyStationLayout>
       <h1>Dashboard de {auth.getUser()?.name || ''}</h1>
       <h2>Estamos dentro de Parent Station</h2>
       <p>Mi Socket ID: {me}</p>
       <video playsInline muted ref={myVideo} autoPlay style={{ width: '100px' }} />
-      
+      {call.isReceivingCall && !callAccepted && (
+        <div>
+          <h1>Llamada entrante...</h1>
+          <button onClick={answerCall}>Responder</button>
+        </div>
+      )}
+      {callAccepted && !callEnded ? <button onClick={handleEndCall}>Hang Up</button> : null}
+      <video playsInline ref={userVideo} autoPlay style={{ width: '300px' }} />
       {group ? (
         <div>
           <p>Estaciones de bebé</p>

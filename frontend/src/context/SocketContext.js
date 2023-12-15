@@ -64,7 +64,10 @@ const ContextProvider = ({ children }) => {
   );
 
   const answerCall = () => {
-    setCallAccepted(true);
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+      connectionRef.current = null;
+    }
 
     const peer = new Peer({
       initiator: false,
@@ -77,15 +80,24 @@ const ContextProvider = ({ children }) => {
     });
 
     peer.on('stream', (currentStream) => {
-      userVideo.current.srcObject = currentStream;
+      if (userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
     });
 
     peer.signal(call.signal);
-
     connectionRef.current = peer;
+
+    setCallAccepted(true);
+    setCallEnded(false);
   };
 
   const callUser = (id) => {
+    if (connectionRef.current) {
+      connectionRef.current.destroy();
+      connectionRef.current = null;
+    }
+
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -97,40 +109,48 @@ const ContextProvider = ({ children }) => {
     });
 
     peer.on('stream', (currentStream) => {
-      userVideo.current.srcObject = currentStream;
+      if (userVideo.current) {
+        userVideo.current.srcObject = currentStream;
+      }
     });
 
-    socket.on('callAccepted', (signal) => {
+    socket.once('callAccepted', (signal) => {
       setCallAccepted(true);
-
       peer.signal(signal);
     });
 
     connectionRef.current = peer;
+    setCallEnded(false);
   };
 
-  const leaveCall = () => {
-    setCallEnded(true);
-
-    connectionRef.current.destroy();
-
-    window.location.reload();
+  const leaveCall = (id) => {
+    if (call.from) {
+      id = call.from;
+    }
+    socket.emit('endCall', { to: id });
+    console.log('desde el context ', id);
+    // window.location.reload();
   };
 
   return (
     <SocketContext.Provider
       value={{
+        socket,
+        connectionRef,
         SocketIdUpdated,
         connectSocket,
         disconnectSocket,
         call,
+        setCall,
         callAccepted,
+        setCallAccepted,
         myVideo,
         userVideo,
         stream,
         name,
         setName,
         callEnded,
+        setCallEnded,
         me,
         callUser,
         leaveCall,

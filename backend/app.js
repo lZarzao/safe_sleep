@@ -116,6 +116,11 @@ io.on('connection', (socket) => {
   socket.on('answerCall', (data) => {
     io.to(data.to).emit('callAccepted', data.signal);
   });
+
+  socket.on('endCall', ({ to }) => {
+    console.log('se fue el vento papu', to)
+    io.to(to).emit('endCall');
+  });
 });
 
 server.listen(port, () => {
