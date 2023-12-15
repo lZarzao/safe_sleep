@@ -42,13 +42,26 @@ const ContextProvider = ({ children }) => {
   const connectSocket = useCallback(() => {
     const newSocket = io('http://localhost:5000');
     setSocket(newSocket);
-  }, []); ;
+  }, []);
 
   const disconnectSocket = useCallback(() => {
     if (socket) {
       socket.disconnect();
     }
-  }, [socket]);;
+  }, [socket]);
+
+  const SocketIdUpdated = useCallback(
+    (callback) => {
+      if (socket) {
+        socket.on('SocketIdUpdated', (data) => {
+          console.log('Datos de Parent actualizados evento por socket:', data);
+          // Aquí puedes actualizar el estado o la UI según los datos recibidos
+          if (callback) callback(data);
+        });
+      }
+    },
+    [socket]
+  );
 
   const answerCall = () => {
     setCallAccepted(true);
@@ -107,6 +120,7 @@ const ContextProvider = ({ children }) => {
   return (
     <SocketContext.Provider
       value={{
+        SocketIdUpdated,
         connectSocket,
         disconnectSocket,
         call,

@@ -7,9 +7,11 @@ import { Server as SocketIO } from 'socket.io';
 import { signupRouter } from './routes/signup.js';
 import { loginRouter } from './routes/login.js';
 import { userRouter } from './routes/user.js';
-import { todoRouter } from './routes/todo.js';
 import { refreshTokenRouter } from './routes/refreshToken.js';
 import { signoutRouter } from './routes/signout.js';
+import { babyRouter } from './routes/baby.js';
+import { parentRouter } from './routes/parent.js';
+import { groupRouter } from './routes/group.js';
 
 import mongoose from 'mongoose';
 import authenticate from './auth/authenticate.js';
@@ -23,6 +25,8 @@ const io = new SocketIO(server, {
   },
 });
 
+global.io = io;
+
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -35,27 +39,74 @@ async function main() {
   console.log('Connected to MongoDB');
 }
 
-main().catch(console.error)
+main().catch(console.error);
 
 app.use('/api/signup', signupRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/user', authenticate, userRouter);
-app.use('/api/todo', authenticate, todoRouter);
 app.use('/api/refresh-token', refreshTokenRouter);
 app.use('/api/signout', signoutRouter);
+app.use('/api/baby', babyRouter);
+app.use('/api/parent', parentRouter);
+app.use('/api/group', groupRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+import Parent from './schema/parent.js';
+import Group from './schema/group.js';
+import Baby from './schema/baby.js';
+
 // Socket.IO event handling
 io.on('connection', (socket) => {
-  console.log("He recibido una solicitud", socket.id)
+  console.log('He recibido una solicitud', socket.id);
   socket.emit('me', socket.id);
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     socket.broadcast.emit('callEnded');
-    console.log("Se cierra la conexión")
+    try {
+      const updatedParent = await Parent.findOneAndUpdate({ socketId: socket.id }, { socketId: '' }, { new: true });
+      if (updatedParent) {
+        console.log('Socket ID eliminado de Parent:', socket.id);
+
+        const group = await Group.findOne({ parentId: updatedParent._id }).populate('babyId');
+        if (group) {
+          const baby = await Baby.findById(group.babyId._id);
+          if (baby && baby.socketId) {
+            // Emitir evento al socketId de BabyStatoin
+            global.io
+              .to(baby.socketId)
+              .emit('SocketIdUpdated', { parent: updatedParent._id, socketId: updatedParent.socketId });
+          }
+        } 
+      }
+
+
+      const updatedBaby = await Baby.findOneAndUpdate({ socketId: socket.id }, { socketId: '' }, { new: true });
+      if (updatedBaby) {
+        console.log('Socket ID eliminado de Baby:', socket.id);
+
+        const group = await Group.findOne({ babyId: updatedBaby._id }).populate('parentId');
+        if (group) {
+          const parent = await Parent.findById(group.parentId._id);
+          if (parent && parent.socketId) {
+            // Emitir evento al socketId de Parent
+            global.io
+              .to(parent.socketId)
+              .emit('SocketIdUpdated', { baby: updatedBaby._id, socketId: updatedBaby.socketId });
+          }
+        }
+      }
+
+
+      if (!updatedParent && !updatedBaby) {
+        console.log('Socket ID no encontrado en Parent ni Baby:', socket.id);
+      }
+    } catch (error) {
+      console.error('Error al actualizar Parent o Baby', error);
+    }
+    console.log('Se cierra la conexión');
   });
 
   socket.on('callUser', ({ userToCall, signalData, from, name }) => {

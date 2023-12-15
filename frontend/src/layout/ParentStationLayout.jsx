@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../auth/AuthProvider';
+import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
-import API_URL from '../constants/constants';
+import API_URL from '../constants/constants.js';
 
-const PortalLayout = ({ children }) => {
+export const PortalLayout = ({ children }) => {
   const auth = useAuth();
   const { connectSocket, disconnectSocket, stream } = useContext(SocketContext);
 
@@ -43,12 +43,6 @@ const PortalLayout = ({ children }) => {
         <nav>
           <ul>
             <li>
-              <Link to='/dashboard'>Dashboard</Link>
-            </li>
-            <li>
-              <Link to='/me'>Profile</Link>
-            </li>
-            <li>
               <Link to='/me'>{auth.getUser()?.username ?? ''}</Link>
             </li>
             <li>
@@ -61,5 +55,3 @@ const PortalLayout = ({ children }) => {
     </>
   );
 };
-
-export default PortalLayout;

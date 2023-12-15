@@ -6,9 +6,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Login from './routes/Login';
 import SignUp from './routes/SignUp';
 import Dashboard from './routes/Dashboard';
+import { BabyStation } from './routes/BabyStation.jsx';
+import { ParentStation } from './routes/ParentStation.jsx';
 import { AuthProvider } from './auth/AuthProvider';
 import { ContextProvider } from './context/SocketContext';
-import ProtectedRoute from './routes/ProtectedRoute';
+import { ProtectedRoute } from './routes/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -27,9 +29,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/dashboard',
-        element: (
-            <Dashboard />
-        ),
+        element: <Dashboard />,
+      },
+      {
+        path: '/baby-station',
+        element: <BabyStation />,
+      },
+      {
+        path: '/parent-station',
+        element: <ParentStation />,
       },
     ],
     // errorElement: <div>Error</div>

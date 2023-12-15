@@ -3,6 +3,7 @@ const getUserInfo = (user) => {
     username: user.username,
     name: user.name,
     id: user.id || user._id,
+    isAdmin: user.isAdmin
   };
 };
 

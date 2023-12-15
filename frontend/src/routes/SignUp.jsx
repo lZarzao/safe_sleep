@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { Navigate, useNavigate } from 'react-router-dom';
-import API_URL from '../constants/constants';
+import API_URL from '../constants/constants.js';
 
 const Signup = () => {
   const [name, setName] = useState('');

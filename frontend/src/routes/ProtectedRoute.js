@@ -1,10 +1,17 @@
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 
-const ProtectedRoute = () => {
+export const ProtectedRoute = () => {
   const auth = useAuth();
+  const location = useLocation();
 
-  return auth.isAuthenticated ? <Outlet /> : <Navigate to='/' />;
+  if (!auth.isAuthenticated) {
+    return <Navigate to='/' />;
+  }
+
+  if (location.pathname.includes('baby-station') && !auth.getUser()?.isAdmin) {
+    return <Navigate to='/dashboard' />;
+  }
+
+  return <Outlet />;
 };
-
-export default ProtectedRoute;
