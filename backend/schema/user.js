@@ -7,6 +7,7 @@ import Token from './token.js';
 const UserSchema = mongoose.Schema({
   id: { type: Object },
   username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true},
   password: { type: String, required: true },
   name: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },

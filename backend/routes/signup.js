@@ -5,9 +5,9 @@ import User from '../schema/user.js';
 export const signupRouter = Router();
 
 signupRouter.post('/', async (req, res) => {
-  const { username, name, password, isAdmin } = req.body;
+  const { username, name, email, password, isAdmin } = req.body;
 
-  if (!username || !name || !password) {
+  if (!username || !name || !password || !email) {
     return res.status(400).json(
       jsonResponse(400, {
         error: 'Fields are required',
@@ -27,7 +27,7 @@ signupRouter.post('/', async (req, res) => {
       );
     }
 
-    const newUser = new User({ username, name, password, isAdmin });
+    const newUser = new User({ username, name, email, password, isAdmin });
     await newUser.save();
 
     res.status(200).json(
