@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
-import API_URL from '../constants/constants.js';
+import { API_URL } from '../constants/constants.js';
 import login from '../assets/login.png';
 import { FaUser, FaLock, FaEnvelope, FaUserPlus } from 'react-icons/fa';
 
@@ -59,15 +59,11 @@ const Signup = () => {
         <img src={login} alt='Logo' className='logo' />
         <h1>Registro</h1>
         {!!errorResponse && <div className='errorMessage'>{errorResponse}</div>}
-        
+
         <label className='login-label'>Nombre</label>
         <div className='input-icon-wrapper'>
           <FaUserPlus className='input-icon' />
-          <input
-            type='text'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder='Nombre completo' />
+          <input type='text' value={name} onChange={(e) => setName(e.target.value)} placeholder='Nombre completo' />
         </div>
 
         <label className='login-label'>Correo electrónico</label>
@@ -102,20 +98,19 @@ const Signup = () => {
             placeholder='Contraseña'
           />
         </div>
-        
-        <div className="input-icon-wrapper checkbox-wrapper">
+
+        <div className='input-icon-wrapper checkbox-wrapper'>
           <input
-            id="admin-checkbox"
-            type="checkbox"
+            id='admin-checkbox'
+            type='checkbox'
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
-            className="checkbox"
+            className='checkbox'
           />
-          <label htmlFor="admin-checkbox" className="checkbox-label">
+          <label htmlFor='admin-checkbox' className='checkbox-label'>
             Administrador
           </label>
         </div>
-
 
         <button>Registrarse</button>
         <p className='signup-prompt'>

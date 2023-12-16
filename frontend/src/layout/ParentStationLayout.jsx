@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
-import API_URL from '../constants/constants.js';
+import { API_URL } from '../constants/constants.js';
 
 export const PortalLayout = ({ children }) => {
   const auth = useAuth();

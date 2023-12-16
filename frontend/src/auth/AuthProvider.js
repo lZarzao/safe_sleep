@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from 'react';
-import API_URL from '../constants/constants.js';
+import { API_URL } from '../constants/constants.js';
 
 const AuthContext = createContext({
   isAuthenticated: false,

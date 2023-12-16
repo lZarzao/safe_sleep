@@ -1,7 +1,6 @@
-import API_URL from '../constants/constants.js'
+import { API_URL } from '../constants/constants.js';
 import { FaBaby, FaCalendar } from 'react-icons/fa';
 import { LuBaby } from 'react-icons/lu';
-
 
 export const ModalBS = ({ isOpen, onClose, onAccept, parentId }) => {
   if (!isOpen) return null;

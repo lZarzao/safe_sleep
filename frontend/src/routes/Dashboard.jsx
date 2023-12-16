@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthProvider.js';
 import { ModalBS } from '../components/ModalBS.jsx';
-import API_URL from '../constants/constants';
+import {API_URL} from '../constants/constants';
 import BabyStation from '../assets/Safesleepbaby.png';
 import ParentStation from '../assets/Safesleepparent.png';
 

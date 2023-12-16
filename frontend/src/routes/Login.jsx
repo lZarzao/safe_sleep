@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
-import API_URL from '../constants/constants';
+import { API_URL } from '../constants/constants';
 import login from '../assets/login.png';
 import { FaUser, FaLock } from 'react-icons/fa';
 

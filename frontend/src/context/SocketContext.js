@@ -1,5 +1,6 @@
 import React, { createContext, useState, useRef, useEffect, useCallback } from 'react';
 import { io } from 'socket.io-client';
+import { BACK_URL } from '../constants/constants.js'
 
 const Peer = window.SimplePeer;
 
@@ -64,7 +65,7 @@ const ContextProvider = ({ children }) => {
   };
 
   const connectSocket = useCallback(() => {
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(BACK_URL);
     setSocket(newSocket);
   }, []);
 

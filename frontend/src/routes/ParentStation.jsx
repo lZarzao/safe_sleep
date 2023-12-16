@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
 import { BabyStationLayout } from '../layout/BabyStationLayout.jsx';
-import API_URL from '../constants/constants.js';
-import babyPhoto from '../assets/babyPhoto.png'
+import { API_URL } from '../constants/constants.js';
+import babyPhoto from '../assets/babyPhoto.png';
 
 export const ParentStation = () => {
   const location = useLocation();

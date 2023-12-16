@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
-import API_URL from '../constants/constants.js';
+import { API_URL } from '../constants/constants.js';
 import logoName from '../assets/logoName.png';
-import ModalStation from '../components/ModalStation.jsx'
+import ModalStation from '../components/ModalStation.jsx';
 
 export const BabyStationLayout = ({ children }) => {
   const auth = useAuth();
@@ -50,7 +50,7 @@ export const BabyStationLayout = ({ children }) => {
         <nav>
           <ul>
             <li>
-              <button onClick={toggleModal} className="button-logo">
+              <button onClick={toggleModal} className='button-logo'>
                 <img src={logoName} alt='Logo' className='navbar-logo' />
               </button>
             </li>

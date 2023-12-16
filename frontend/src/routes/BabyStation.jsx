@@ -4,7 +4,7 @@ import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
 import { BabyStationLayout } from '../layout/BabyStationLayout.jsx';
 import { AddParentModal } from '../components/AddParentStation.jsx';
-import API_URL from '../constants/constants';
+import { API_URL } from '../constants/constants';
 import parentPhoto from '../assets/parentPhoto.png';
 
 export const BabyStation = () => {
