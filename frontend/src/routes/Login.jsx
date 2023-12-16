@@ -3,7 +3,7 @@ import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import API_URL from '../constants/constants';
-import logoImage from '../assets/SafeSleep.png';
+import login from '../assets/login.png';
 import { FaUser, FaLock } from 'react-icons/fa';
 
 const Login = () => {
@@ -54,7 +54,7 @@ const Login = () => {
   return (
     <DefaultLayout>
       <form className='form' onSubmit={handleSubmit}>
-        <img src={logoImage} alt='Logo' className='logo' />
+        <img src={login} alt='Logo' className='logo' />
         <h1>Bienvenido</h1>
         {!!errorResponse && <div className='errorMessage'>{errorResponse}</div>}
 

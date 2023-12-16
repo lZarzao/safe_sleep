@@ -1,11 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
 import API_URL from '../constants/constants.js';
+import logoName from '../assets/logoName.png';
+import ModalStation from '../components/ModalStation.jsx'
 
 export const BabyStationLayout = ({ children }) => {
   const auth = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { connectSocket, disconnectSocket, stream } = useContext(SocketContext);
 
   useEffect(() => {
@@ -17,6 +20,10 @@ export const BabyStationLayout = ({ children }) => {
       disconnectSocket();
     };
   }, []);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -43,7 +50,9 @@ export const BabyStationLayout = ({ children }) => {
         <nav>
           <ul>
             <li>
-              <Link to='/me'>{auth.getUser()?.username ?? ''}</Link>
+              <button onClick={toggleModal} className="button-logo">
+                <img src={logoName} alt='Logo' className='navbar-logo' />
+              </button>
             </li>
             <li>
               <button onClick={handleSignOut}>Sign Out</button>
@@ -51,7 +60,8 @@ export const BabyStationLayout = ({ children }) => {
           </ul>
         </nav>
       </header>
-      <main className='dashboard'>{children}</main>
+      <ModalStation isOpen={isModalOpen} toggleModal={toggleModal} />
+      <main className='dashboard-Station'>{children}</main>
     </>
   );
 };

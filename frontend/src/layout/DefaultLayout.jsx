@@ -13,7 +13,7 @@ const DefaultLayout = ({ children }) => {
                 </Link>
               </li>
               <li>
-                <Link to='/signup'>Signup</Link>
+                <Link to='/signup'>Registro</Link>
               </li>
             </ul>
           </nav>

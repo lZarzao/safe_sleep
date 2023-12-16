@@ -3,7 +3,7 @@ import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import API_URL from '../constants/constants.js';
-import logoImage from '../assets/SafeSleep.png';
+import login from '../assets/login.png';
 import { FaUser, FaLock, FaEnvelope, FaUserPlus } from 'react-icons/fa';
 
 const Signup = () => {
@@ -56,7 +56,7 @@ const Signup = () => {
   return (
     <DefaultLayout>
       <form className='form' onSubmit={handleSubmit}>
-        <img src={logoImage} alt='Logo' className='logo' />
+        <img src={login} alt='Logo' className='logo' />
         <h1>Registro</h1>
         {!!errorResponse && <div className='errorMessage'>{errorResponse}</div>}
         
@@ -119,7 +119,7 @@ const Signup = () => {
 
         <button>Registrarse</button>
         <p className='signup-prompt'>
-          Si ya tienes cuenta, ingresa aquí: <Link to='/'>Login</Link>
+          Si ya tienes cuenta, ingresa aquí: <Link to='/'>Iniciar sesion</Link>
         </p>
       </form>
     </DefaultLayout>

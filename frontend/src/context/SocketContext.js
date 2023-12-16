@@ -167,6 +167,7 @@ const ContextProvider = ({ children }) => {
     <SocketContext.Provider
       value={{
         isMicActive,
+        setIsMicActive,
         toggleMic,
         socket,
         connectionRef,

@@ -3,7 +3,9 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
 import { BabyStationLayout } from '../layout/BabyStationLayout.jsx';
+import { AddParentModal } from '../components/AddParentStation.jsx';
 import API_URL from '../constants/constants';
+import parentPhoto from '../assets/parentPhoto.png';
 
 export const BabyStation = () => {
   const location = useLocation();
@@ -12,6 +14,13 @@ export const BabyStation = () => {
   const accessToken = auth.getAccessToken();
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
+  const [group, setGroup] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [userIsParent, setUserIsParent] = useState(false);
+  const [parentId, setparentId] = useState('');
+  const [buttonValue, setButtonValue] = useState('Iniciar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     me,
     setCall,
@@ -27,11 +36,6 @@ export const BabyStation = () => {
     setCallEnded,
     connectionRef,
   } = useContext(SocketContext);
-  const [group, setGroup] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('');
-  const [userIsParent, setUserIsParent] = useState(false);
-  const [parentId, setparentId] = useState('');
 
   const handleSearch = async () => {
     setEmail('');
@@ -171,6 +175,7 @@ export const BabyStation = () => {
         setCall({});
         setCallAccepted(false);
         setCallEnded(true);
+        setButtonValue('Iniciar');
         console.log('Llamada finalizada');
       };
 
@@ -200,6 +205,7 @@ export const BabyStation = () => {
 
   const handleConnect = (parentSocketId) => {
     callUser(parentSocketId);
+    setButtonValue('Iniciando');
   };
 
   const handleEndCall = (parentSocketId) => {
@@ -213,6 +219,7 @@ export const BabyStation = () => {
       userVideo.current.srcObject = null;
     }
 
+    setButtonValue('Iniciar');
     setCall({});
     setCallAccepted(false);
     setCallEnded(true);
@@ -220,62 +227,61 @@ export const BabyStation = () => {
     // Cualquier otra limpieza o actualización de UI
   };
 
+  const toggleModal = () => {
+    setUser(null);
+    setIsModalOpen(!isModalOpen);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
   return (
     <BabyStationLayout>
-      <h1>Dashboard de {auth.getUser()?.name || ''}</h1>
-      <h2>Estamos dentro de Baby Station</h2>
-      <p>Mi Socket ID: {me}</p>
-      <video playsInline muted ref={myVideo} autoPlay style={{ width: '400px' }} />
-      <video playsInline ref={userVideo} autoPlay />
-      {group ? (
-        <div>
-          <p>Padres y tutores</p>
+      <h1>{BabyData.name || ''}</h1>
+      <video playsInline muted ref={myVideo} autoPlay />
+      <video id='userVideo' playsInline ref={userVideo} style={{ display: 'none' }} autoPlay />
+      {group && (
+        <section className='parents-section'>
+          <h2>Estaciones de padres</h2>
           {/* Mostrar información del grupo */}
           {group.map((member) => (
-            <div key={member._id}>
-              <p key={member._id}>{member.parentId.parentId.name}</p>
-              {member.parentId.socketId ? (
-                <div>
-                  <button onClick={() => handleConnect(member.parentId.socketId)}>Conectar</button>
-                  {callAccepted && !callEnded ? (
-                    <button onClick={() => handleEndCall(member.parentId.socketId)}>Hang Up</button>
-                  ) : null}
-                </div>
-              ) : (
-                <p>Desconectado</p>
-              )}
+            <div key={member._id} className='member-card'>
+              <div className='member-photo'>
+                <img src={member.parentId.parentId.photoUrl || parentPhoto} alt='Foto del usuario' />
+              </div>
+              <div className='member-info'>
+                <p key={member._id}>{member.parentId.parentId.name}</p>
+                <p className={member.parentId.socketId ? 'status-connected' : 'status-disconnected'}>
+                  {member.parentId.socketId ? 'Conectado' : 'Desconectado'}
+                </p>
+              </div>
+              <div className='member-button'>
+                {member.parentId.socketId && !callAccepted && (
+                  <button onClick={() => handleConnect(member.parentId.socketId)} className='connect-button'>
+                    {buttonValue}
+                  </button>
+                )}
+                {callAccepted && !callEnded && (
+                  <button onClick={() => handleEndCall(member.parentId.socketId)} className='hang-up-button'>
+                    Terminar
+                  </button>
+                )}
+              </div>
             </div>
           ))}
-        </div>
-      ) : (
-        <div>
-          <input type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Buscar padres' />
-          <button type='button' onClick={handleSearch}>
-            Buscar
-          </button>
-          {user && (
-            <form onSubmit={handleAddMember}>
-              <div>
-                <p>Nombre: {user.name}</p>
-                <p>Username: {user.username}</p>
-                <button
-                  type='submit'
-                  disabled={!userIsParent} // Cambiar según la lógica para determinar si el usuario es un padre
-                >
-                  Añadir
-                </button>
-                {!userIsParent && <p>El usuario aún no se ha registrado como estación de padre.</p>}
-              </div>
-            </form>
-          )}
-
-          {error && <p>{error}</p>}
-        </div>
+        </section>
       )}
-      <video playsInline ref={userVideo} autoPlay />
+      <button onClick={toggleModal}>Añadir</button>
+      <AddParentModal
+        isOpen={isModalOpen}
+        onClose={toggleModal}
+        user={user}
+        userIsParent={userIsParent}
+        handleAddMember={handleAddMember}
+        email={email}
+        setEmail={setEmail}
+        handleSearch={handleSearch}
+      />
     </BabyStationLayout>
   );
 };

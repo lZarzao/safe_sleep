@@ -1,11 +1,11 @@
 :root {
-  --primary-color: #1f4287; /* Verde principal, puedes ajustar al color exacto que necesites */
-  --text-color: #333; /* Color de texto principal */
-  --form-background: #f2f2f2; /* Color de fondo del formulario */
-  --input-background: #fff; /* Color de fondo de los inputs */
-  --input-border: #ccc; /* Color del borde de los inputs */
-  --error-background: #f2dede; /* Fondo para mensajes de error */
-  --error-text: #a94442; /* Texto para mensajes de error */
+  --primary-color: #1f4287;
+  --text-color: #333;
+  --form-background: #f2f2f2;
+  --input-background: #fff;
+  --input-border: #ccc;
+  --error-background: #f2dede;
+  --error-text: #a94442;
 }
 
 * {
@@ -68,7 +68,6 @@ nav ul li {
 nav a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
 }
 
 .home-icon {
@@ -76,31 +75,53 @@ nav a {
   height: 25px;
 }
 
+.button-logo {
+  padding: 0px;
+  height: 45px;
+}
+
+.navbar-logo {
+  height: 30px;
+  cursor: pointer;
+}
+
+nav ul li:last-child button {
+  background-color: #65c8c3;
+  color: white;
+  padding: 0px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100px;
+  height: 35px;
+}
+
 /* Estilos del formulario */
 .form {
   width: 100%;
-  max-width: 400px; /* Ancho máximo del formulario */
-  margin: 50px auto; /* Centrar formulario vertical y horizontalmente */
+  max-width: 400px;
+  margin: 50px auto;
   background: var(--form-background);
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave alrededor del formulario */
-  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .logo {
   display: block;
-  margin: 0 auto 20px; /* Centrado y con margen abajo */
-  max-width: 180px; /* Asegúrate de que la imagen no desborde el contenedor */
-  height: auto; /* Mantiene la proporción de la imagen */
+  margin: 0 auto;
+  width: 280px;
+  height: 180px;
+  object-fit: cover;
+  object-position: top;
 }
 
 label {
   display: block;
-  margin: 0; /* Ajusta el margen como sea necesario */
-  padding: 0; /* Ajusta el padding como sea necesario */
-  white-space: nowrap; /* Evita que el texto se envuelva y cause desbordamiento */
-  overflow: hidden; /* Oculta cualquier contenido que desborde */
-  text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .login-label {
@@ -110,13 +131,18 @@ label {
 
 input[type='text'],
 input[type='email'],
-input[type='password'] {
+input[type='password'],
+input[type='date'] {
   width: 100%;
   padding: 10px;
   padding-left: 38px;
   border: 1px solid var(--input-border);
   border-radius: 4px;
   background-color: var(--input-background);
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
 }
 
 .input-icon-wrapper {
@@ -160,7 +186,12 @@ button {
 }
 
 button:hover {
-  background-color: darken(var(--primary-color), 10%);
+  background-color: #65c8c3;
+}
+
+button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* Estilos para mensajes de error */
@@ -186,7 +217,8 @@ button:hover {
   font-size: 16px;
 }
 
-.dashboard {
+.dashboard,
+.dashboard-Station {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -196,6 +228,10 @@ button:hover {
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+}
+
+.dashboard-Station {
+  justify-content: flex-start;
 }
 
 .station-buttons {
@@ -227,12 +263,12 @@ button:hover {
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.3); /* Overlay oscuro, ajusta la opacidad según necesites */
+  background: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
 .station-button span {
-  position: relative; /* Asegura que el texto esté sobre el overlay */
+  position: relative;
   z-index: 2;
 }
 
@@ -254,7 +290,7 @@ button:hover {
 
 .modal {
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   left: 0;
   top: 0;
   width: 100%;
@@ -265,10 +301,75 @@ button:hover {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
+  margin: 10% auto;
+  padding: 10px 15px;
   border: 1px solid #888;
-  width: 80%;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-form {
+  padding: 30px 25px;
+}
+
+.modal h1 {
+  color: var(--primary-color);
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-input,
+.modal-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-buttons.addParentStation {
+  margin-top: 10px;
+}
+
+.modal-button.cancel {
+  background-color: #ccc;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.modal-button.accept {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.modal-select option {
+  background: white;
+  color: var(--text-color);
+}
+
+.member-card.addParent {
+  margin-top: 10px;
+}
+
+.input-group.addParentStation {
+  margin-bottom: 0px;
 }
 
 .close {
@@ -285,8 +386,120 @@ button:hover {
   cursor: pointer;
 }
 
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-color);
+}
+
+.input-group-modal {
+}
+
+.modal-input,
+.modal-select {
+  padding-left: 35px;
+}
+
+.modal-button.accept {
+  margin: 10px 0px 0px;
+}
+
+.parents-section {
+  width: 100%;
+  margin: 30px 0px 10px;
+}
+
+.parents-section h2 {
+  color: var(--primary-color);
+  text-align: start;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.member-card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.member-card.addParent {
+}
+
+.member-photo img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.member-card p {
+  text-align: start;
+}
+
+.member-info {
+  font-size: 20px;
+  margin-right: 10px;
+  width: 100px;
+  min-width: 100px;
+}
+
+.connect-button,
+.hang-up-button {
+  /* Estilos para los botones */
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.member-button {
+  width: 100%;
+}
+
+.connect-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.connect-button:hover {
+  background-color: #4caf50;
+}
+
+.hang-up-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.status-disconnected {
+  color: #f44336;
+  font-size: 12px;
+}
+
+.status-connected {
+  font-size: 12px;
+  color: #4caf50;
+}
+
+video {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   label {
-    font-size: 14px; /* Reduce el tamaño de fuente si es necesario */
+    font-size: 14px;
   }
 }

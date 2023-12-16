@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthProvider.js';
 import { SocketContext } from '../context/SocketContext.js';
 import { BabyStationLayout } from '../layout/BabyStationLayout.jsx';
 import API_URL from '../constants/constants.js';
+import babyPhoto from '../assets/babyPhoto.png'
 
 export const ParentStation = () => {
   const location = useLocation();
@@ -16,6 +17,7 @@ export const ParentStation = () => {
     call,
     callAccepted,
     callEnded,
+    setIsMicActive,
     toggleMic,
     isMicActive,
     userVideo,
@@ -93,6 +95,7 @@ export const ParentStation = () => {
         setCall({});
         setCallAccepted(false);
         setCallEnded(true);
+        setIsMicActive(false);
         console.log('Llamada finalizada');
       };
 
@@ -138,39 +141,54 @@ export const ParentStation = () => {
     setCall({});
     setCallAccepted(false);
     setCallEnded(true);
+    setIsMicActive(false);
     leaveCall();
     // Cualquier otra limpieza o actualización de UI
   };
 
   return (
     <BabyStationLayout>
-      <h1>Dashboard de {auth.getUser()?.name || ''}</h1>
-      <h2>Estamos dentro de Parent Station</h2>
-      <p>Mi Socket ID: {me}</p>
-      <button onClick={toggleMic}>{isMicActive ? 'Desactivar Micrófono' : 'Activar Micrófono'}</button>
+      <h1>{auth.getUser()?.name || ''}</h1>
       {call.isReceivingCall && !callAccepted && (
         <div>
           <h1>Llamada entrante...</h1>
-          <button onClick={answerCall}>Responder</button>
         </div>
       )}
-      {callAccepted && !callEnded ? <button onClick={handleEndCall}>Hang Up</button> : null}
-      <video playsInline ref={userVideo} autoPlay style={{ width: '300px' }} />
+      <video playsInline ref={userVideo} autoPlay />
+      {callAccepted && !callEnded && (
+        <button onClick={toggleMic}>{isMicActive ? 'Desactivar Micrófono' : 'Activar Micrófono'}</button>
+      )}
       {group ? (
-        <div>
-          <p>Estaciones de bebé</p>
+        <section className='parents-section'>
+          <h2>Estaciones de bebé</h2>
           {/* Mostrar información del grupo */}
           {group.map((member) => (
-            <div key={member._id}>
-              <p>{member.babyId.name}</p>
-              {member.babyId.socketId ? (
-                <button onClick={() => member.babyId.socketId}>Conectar</button>
-              ) : (
-                <p>Desconectado</p>
-              )}
+            <div key={member._id} className='member-card'>
+              <div className='member-photo'>
+                <img src={member.parentId.parentId.photoUrl || babyPhoto} alt='Foto del usuario' />
+              </div>
+              <div className='member-info'>
+                <p key={member._id}>{member.babyId.name}</p>
+                <p className={member.babyId.socketId ? 'status-connected' : 'status-disconnected'}>
+                  {member.parentId.socketId ? 'Conectado' : 'Desconectado'}
+                </p>
+              </div>
+
+              <div className='member-button'>
+                {call.isReceivingCall && !callAccepted && (
+                  <button onClick={answerCall} className='connect-button'>
+                    Ver Transmisión
+                  </button>
+                )}
+                {callAccepted && !callEnded && (
+                  <button onClick={handleEndCall} className='hang-up-button'>
+                    Salir
+                  </button>
+                )}
+              </div>
             </div>
           ))}
-        </div>
+        </section>
       ) : (
         <div>
           <p>No hay estaciones de bebé disponibles</p>

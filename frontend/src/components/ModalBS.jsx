@@ -1,4 +1,7 @@
 import API_URL from '../constants/constants.js'
+import { FaBaby, FaCalendar } from 'react-icons/fa';
+import { LuBaby } from 'react-icons/lu';
+
 
 export const ModalBS = ({ isOpen, onClose, onAccept, parentId }) => {
   if (!isOpen) return null;
@@ -35,20 +38,31 @@ export const ModalBS = ({ isOpen, onClose, onAccept, parentId }) => {
         <span className='close' onClick={onClose}>
           &times;
         </span>
-        <h2>Registrar Bebé</h2>
-        <form onSubmit={handleSubmit}>
-          <input type='text' name='name' placeholder='Nombre' />
-          <select name='gender'>
-            <option value='male'>Masculino</option>
-            <option value='female'>Femenino</option>
-          </select>
-          <input type='date' name='birthDate' />
-          <div>
-            <button type='button' onClick={onClose}>
-              Cancelar
-            </button>
-            <button type='submit'>Aceptar</button>
+        <form onSubmit={handleSubmit} className='modal-form'>
+          <h1>Registrar Bebé</h1>
+          <div className='input-group'>
+            <FaBaby className='form-icon' />
+            <input type='text' name='name' placeholder='Nombre' className='modal-input' />
           </div>
+
+          <div className='input-group'>
+            <LuBaby className='form-icon' />
+            <select name='gender' className='modal-select'>
+              <option value='male'>Masculino</option>
+              <option value='female'>Femenino</option>
+            </select>
+          </div>
+          <div className='input-group'>
+            <FaCalendar className='form-icon' />
+            <input type='date' name='birthDate' className='modal-input' />
+          </div>
+
+          <button type='button' onClick={onClose} className='modal-button cancel'>
+            Cancelar
+          </button>
+          <button type='submit' className='modal-button accept'>
+            Aceptar
+          </button>
         </form>
       </div>
     </div>
