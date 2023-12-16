@@ -6,8 +6,12 @@ const Peer = window.SimplePeer;
 const SocketContext = createContext();
 
 const ContextProvider = ({ children }) => {
+  const initialIsBabyStation = window.location.pathname.includes('/baby-station');
+
   const [socket, setSocket] = useState(null);
+  const [isBabyStation, setIsBabyStation] = useState(initialIsBabyStation);
   const [callAccepted, setCallAccepted] = useState(false);
+  const [isMicActive, setIsMicActive] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [stream, setStream] = useState(null);
   const [name, setName] = useState('');
@@ -19,16 +23,26 @@ const ContextProvider = ({ children }) => {
   const connectionRef = useRef();
 
   useEffect(() => {
+    const currentPath = window.location.pathname;
+    setIsBabyStation(currentPath.includes('/baby-station'));
+
     if (!socket) {
       return;
     }
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((currentStream) => {
-      setStream(currentStream);
-      if (myVideo.current) {
-        myVideo.current.srcObject = currentStream;
-      }
-    });
+    let mediaConstraints = { video: isBabyStation, audio: true };
+
+      navigator.mediaDevices
+        .getUserMedia(mediaConstraints)
+        .then((currentStream) => {
+          setStream(currentStream);
+          if (myVideo.current && isBabyStation) {
+            myVideo.current.srcObject = currentStream;
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener el flujo de medios: ', error);
+        });
 
     if (socket) {
       socket.on('me', (id) => setMe(id));
@@ -37,7 +51,17 @@ const ContextProvider = ({ children }) => {
         setCall({ isReceivingCall: true, from, name: callerName, signal });
       });
     }
-  }, [socket]);
+  }, [socket, isBabyStation]);
+
+  const toggleMic = async () => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      if (audioTracks.length > 0) {
+        audioTracks[0].enabled = !audioTracks[0].enabled;
+      }
+    }
+    setIsMicActive(!isMicActive);
+  };
 
   const connectSocket = useCallback(() => {
     const newSocket = io('http://localhost:5000');
@@ -84,6 +108,13 @@ const ContextProvider = ({ children }) => {
         userVideo.current.srcObject = currentStream;
       }
     });
+
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      if (audioTracks.length > 0) {
+        audioTracks[0].enabled = !audioTracks[0].enabled;
+      }
+    }
 
     peer.signal(call.signal);
     connectionRef.current = peer;
@@ -135,6 +166,8 @@ const ContextProvider = ({ children }) => {
   return (
     <SocketContext.Provider
       value={{
+        isMicActive,
+        toggleMic,
         socket,
         connectionRef,
         SocketIdUpdated,

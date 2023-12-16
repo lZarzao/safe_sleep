@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { BiHomeAlt2 } from 'react-icons/bi';
 
 const DefaultLayout = ({ children }) => {
     return (
@@ -7,7 +8,9 @@ const DefaultLayout = ({ children }) => {
           <nav>
             <ul>
               <li>
-                <Link to='/'>Home</Link>
+                <Link to='/'>
+                  <BiHomeAlt2 className='home-icon' />
+                </Link>
               </li>
               <li>
                 <Link to='/signup'>Signup</Link>
@@ -16,7 +19,7 @@ const DefaultLayout = ({ children }) => {
           </nav>
         </header>
 
-        <main>{ children }</main>
+        <main>{children}</main>
       </div>
     );
 }

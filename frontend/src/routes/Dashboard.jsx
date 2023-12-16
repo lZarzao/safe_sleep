@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useAuth } from '../auth/AuthProvider.js';
 import { ModalBS } from '../components/ModalBS.jsx';
 import API_URL from '../constants/constants';
+import BabyStation from '../assets/Safesleepbaby.png';
+import ParentStation from '../assets/Safesleepparent.png';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -67,12 +69,30 @@ const Dashboard = () => {
   return (
     <main className='dashboard'>
       <h1>Hola {auth.getUser()?.name || ''}</h1>
-      <p>Para continuar, por favor selecciona una estación</p>
-      <button disabled={!isAdmin} onClick={handleBabyStationClick}>
-        Estación de bebé
-      </button>
-      <button onClick={handleParentStationClick}>Estación de padres</button>
-      <p>Obs: La estación de bebé es exclusivo del usuario administrador</p>
+      <p>Para continuar, selecciona una estación</p>
+
+      <div className='station-buttons'>
+        <button
+          disabled={!isAdmin}
+          onClick={handleBabyStationClick}
+          className='station-button'
+          style={{ backgroundImage: `url(${BabyStation})` }}
+        >
+          {/* Aquí podrías poner una imagen de fondo en el botón via CSS */}
+          <span>Estación de bebé</span>
+        </button>
+
+        <button
+          onClick={handleParentStationClick}
+          className='station-button'
+          style={{ backgroundImage: `url(${ParentStation})` }}
+        >
+          {/* Y también aquí para el otro botón */}
+          <span>Estación de padres</span>
+        </button>
+      </div>
+
+      <p className='dashboard-observation'>Obs: La estación de bebé es exclusivo del usuario administrador</p>
       <ModalBS isOpen={isModalOpen} onClose={handleCloseModal} onAccept={handleAcceptModal} parentId={id} />
     </main>
   );

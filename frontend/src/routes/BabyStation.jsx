@@ -229,6 +229,7 @@ export const BabyStation = () => {
       <h2>Estamos dentro de Baby Station</h2>
       <p>Mi Socket ID: {me}</p>
       <video playsInline muted ref={myVideo} autoPlay style={{ width: '400px' }} />
+      <video playsInline ref={userVideo} autoPlay />
       {group ? (
         <div>
           <p>Padres y tutores</p>

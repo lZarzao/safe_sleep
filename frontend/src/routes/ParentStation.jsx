@@ -11,12 +11,13 @@ export const ParentStation = () => {
   const auth = useAuth();
   const {
     me,
-    myVideo,
     SocketIdUpdated,
     answerCall,
     call,
     callAccepted,
     callEnded,
+    toggleMic,
+    isMicActive,
     userVideo,
     leaveCall,
     socket,
@@ -146,7 +147,7 @@ export const ParentStation = () => {
       <h1>Dashboard de {auth.getUser()?.name || ''}</h1>
       <h2>Estamos dentro de Parent Station</h2>
       <p>Mi Socket ID: {me}</p>
-      <video playsInline muted ref={myVideo} autoPlay style={{ width: '100px' }} />
+      <button onClick={toggleMic}>{isMicActive ? 'Desactivar Micrófono' : 'Activar Micrófono'}</button>
       {call.isReceivingCall && !callAccepted && (
         <div>
           <h1>Llamada entrante...</h1>

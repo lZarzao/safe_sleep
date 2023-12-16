@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import DefaultLayout from '../layout/DefaultLayout';
 import { useAuth } from '../auth/AuthProvider';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import API_URL from '../constants/constants';
+import logoImage from '../assets/SafeSleep.png';
+import { FaUser, FaLock } from 'react-icons/fa';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -52,15 +54,35 @@ const Login = () => {
   return (
     <DefaultLayout>
       <form className='form' onSubmit={handleSubmit}>
-        <h1>Login</h1>
+        <img src={logoImage} alt='Logo' className='logo' />
+        <h1>Bienvenido</h1>
         {!!errorResponse && <div className='errorMessage'>{errorResponse}</div>}
-        <label>Username</label>
-        <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
 
-        <label>Password</label>
-        <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+        <label className='login-label'>Correo electrónico</label>
+        <div className='input-icon-wrapper'>
+          <FaUser className='input-icon' />
+          <input
+            type='text'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder='Ingrese su correo'
+          />
+        </div>
+        <label className='login-label'>Contraseña</label>
+        <div className='input-icon-wrapper'>
+          <FaLock className='input-icon' />
+          <input
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder='Ingrese su contraseña'
+          />
+        </div>
 
         <button>Login</button>
+        <p className='signup-prompt'>
+          Si eres nuevo, suscríbete aquí: <Link to='/signup'>Crear cuenta</Link>
+        </p>
       </form>
     </DefaultLayout>
   );

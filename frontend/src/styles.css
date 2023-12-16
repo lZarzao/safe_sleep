@@ -1,71 +1,256 @@
 :root {
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
+  --primary-color: #1f4287; /* Verde principal, puedes ajustar al color exacto que necesites */
+  --text-color: #333; /* Color de texto principal */
+  --form-background: #f2f2f2; /* Color de fondo del formulario */
+  --input-background: #fff; /* Color de fondo de los inputs */
+  --input-border: #ccc; /* Color del borde de los inputs */
+  --error-background: #f2dede; /* Fondo para mensajes de error */
+  --error-text: #a94442; /* Texto para mensajes de error */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: Helvetica, sans-serif;
   font-weight: 400;
 }
 
 body {
-  padding: 0;
   margin: 0;
+  padding: 0;
+  background-color: var(--form-background);
+}
+
+h1 {
+  color: var(--primary-color);
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+/* Estilos de navegación */
+nav {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0px 20px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  width: 100%;
+}
+
+nav ul li {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.home-icon {
+  width: 25px;
+  height: 25px;
+}
+
+/* Estilos del formulario */
+.form {
+  width: 100%;
+  max-width: 400px; /* Ancho máximo del formulario */
+  margin: 50px auto; /* Centrar formulario vertical y horizontalmente */
+  background: var(--form-background);
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave alrededor del formulario */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 20px; /* Centrado y con margen abajo */
+  max-width: 180px; /* Asegúrate de que la imagen no desborde el contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
 }
 
 label {
   display: block;
+  margin: 0; /* Ajusta el margen como sea necesario */
+  padding: 0; /* Ajusta el padding como sea necesario */
+  white-space: nowrap; /* Evita que el texto se envuelva y cause desbordamiento */
+  overflow: hidden; /* Oculta cualquier contenido que desborde */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
 }
 
-.form {
-  width: 400px;
-  margin: 0 auto;
+.login-label {
+  font-size: 20px;
+  margin: 20px 0px 10px;
 }
 
-input[type="text"],
-[type="password"] {
-  display: block;
-  padding: 10px;
-  box-sizing: border-box;
+input[type='text'],
+input[type='email'],
+input[type='password'] {
   width: 100%;
-  margin: 5px 0 10px 0;
-}
-
-input[type="button"],
-button {
-  background-color: rgb(39, 131, 212);
   padding: 10px;
-  border: 0;
-  min-width: 100px;
-  border-radius: 5px;
-  color: white;
+  padding-left: 38px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-background);
 }
 
-nav {
-  background-color: #eee;
+.input-icon-wrapper {
+  position: relative;
+  margin-bottom: 20px;
 }
 
-nav ul {
-  margin: 0;
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
 }
 
-nav ul li {
-  display: inline-block;
-  padding: 10px;
+.signup-prompt {
+  font-size: 12px;
+  text-align: left;
+  margin-top: 20px;
 }
 
-a {
-  color: rgb(97, 28, 161);
+.signup-prompt a {
   text-decoration: none;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.signup-prompt a:hover {
+  text-decoration: underline;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+/* Estilos para mensajes de error */
+.errorMessage {
+  background-color: var(--error-background);
+  color: var(--error-text);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.checkbox-label {
+  font-size: 16px;
 }
 
 .dashboard {
-  width: 500px;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
 }
 
-.errorMessage {
-  background-color: #f2dede;
-  color: #a94442;
-  padding: 10px;
+.station-buttons {
+  flex-grow: 1;
+  flex-direction: column;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
+.station-button {
+  flex-grow: 1;
+  margin: 10px 0;
+  padding: 20px 10px;
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  font-weight: bolder;
+  font-size: 24px;
+  border: 6px solid var(--primary-color);
+  text-shadow: 3px 3px 5px var(--primary-color);
+  position: relative;
+}
+
+.station-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3); /* Overlay oscuro, ajusta la opacidad según necesites */
+  z-index: 1;
+}
+
+.station-button span {
+  position: relative; /* Asegura que el texto esté sobre el overlay */
+  z-index: 2;
+}
+
+.station-button:last-child {
+  margin-bottom: 0;
+}
+
+.station-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.dashboard-observation {
+  font-size: 0.8em;
+  color: var(--text-color);
+  margin-top: 50px;
+  text-align: left;
+}
 
 .modal {
   position: fixed;
@@ -98,4 +283,10 @@ a {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  label {
+    font-size: 14px; /* Reduce el tamaño de fuente si es necesario */
+  }
 }
